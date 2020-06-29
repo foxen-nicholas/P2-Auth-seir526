@@ -1,6 +1,6 @@
 // Required NPM libraries
 require('dotenv').config();
-// require express and setup an express app instance
+
 const Express = require('express');
 // require and set view engine using ejs
 const ejsLayouts = require('express-ejs-layouts')

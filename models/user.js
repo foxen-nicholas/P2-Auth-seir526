@@ -63,6 +63,3 @@ user.associate = function(models) {
 
   return user;
 };
-
-// take inputed password and comapre to hashed password in user table
-// hash new password to add to user table

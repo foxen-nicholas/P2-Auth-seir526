@@ -22,9 +22,11 @@ app.use(helmet());
 // ROUTES
 app.get('/', function(req, res) {
   // check to see if the user logged in
-  res.render('index');
+  res.render('index')
 })
 
+// include auth controllers 
+app.use('/auth', require('./controllers/auth'));
 // initialize 
 app.listen(process.env.PORT || 3000, function() {
   console.log(`Rootin n Tootin on port ${process.env.PORT}`)

@@ -40,32 +40,38 @@ router.post('/register', function(req, res) {db.user.findOrCreate({
     req.flash('error', err.message);
     res.redirect('/auth/register');
   })
-
 })
 
 //login get route
 router.get('/login', function(req,res) {
   res.render('auth/login');
-})
+});
 
 // login post route
-router.post('login', function(req, res) {
+router.post('login', function(req, res, next) {
   passport.authenticate('local', function(error, user, info) {
     // If no user authenticated
     if (!user) {
-      req.flash('erro', 'Invalid username or password');
+      req.flash('error', 'Invalid username or password');
+      req.session.save(function() {
+        return res.redirect('/auth/login');
+      });
       // save to our user session no username
       // redirect our user to try logging in again
     }
     if (error) {
-
-      return error;
+      return next(error);
     }
 
     req.login(function(user, error) {
-      // if error move to erro
+      // if error move to error
+      if(error) next(error);
       // if success flash success message
+      req.flash('Success', 'You are validated and logged in.');
       // if success save session and redirect user
+      req.session.save(function() {
+        return res.redirect('/');
+      })
     })
   })
 })

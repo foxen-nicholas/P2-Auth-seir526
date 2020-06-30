@@ -12,6 +12,7 @@ const flash = require("flash");
 const passport = require('./config/ppConfig');
 const db = require('./models');
 // want to add alink to our customer middleware for isLoggedIn
+const isLoggedIn = require('./middleware/isLoggedIn');
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 
@@ -54,6 +55,10 @@ app.use(function(req,res, next) {
 app.get('/', function(req, res) {
   // check to see if the user logged in
   res.render('index')
+})
+
+app.get('/profile', isLoggedIn, function(req, res) {
+  res.render('index');
 })
 
 // include auth controllers 

@@ -26,6 +26,10 @@ router.post('/register', function(req, res) {db.user.findOrCreate({
     if(created) {
       // authenticate user and start authorization process
       console.log("User created!");
+      passport.authenticate('local', {
+        succesRedirect: '/',
+        successFlash: 'Thanks for signing up!'
+      }) (req, res);
       res.redirect("/");
     } else {
       // else if user already exists
@@ -36,7 +40,7 @@ router.post('/register', function(req, res) {db.user.findOrCreate({
       req.redirect('/auth/register');
     }
   }).catch(function(err) {
-    console.log(`Erro found. \nMessage: ${err.message}. \nPlease review - ${err}`);
+    console.log(`Error found. \nMessage: ${err.message}. \nPlease review - ${err}`);
     req.flash('error', err.message);
     res.redirect('/auth/register');
   })
@@ -73,7 +77,7 @@ router.post('login', function(req, res, next) {
         return res.redirect('/');
       })
     })
-  })
+  })(req, res, next);
 })
 
 router.post('/login', passport.authenticate('local', {

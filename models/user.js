@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     hooks: {
-      // take  inouted password 
+      // take  inputed password 
       // before record creation
       beforeCreate: function(createdUser, options) {
         if(createdUser && createdUser.password) {

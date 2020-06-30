@@ -7,7 +7,7 @@ const db = require('../models');
 // import middleware
 const flash = require('flash');
 // TODO: 
-const passport;
+const passport = require('../config/ppConfig');
 
 // register GET route
 router.get('/register', function(req, res) {

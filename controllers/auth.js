@@ -14,7 +14,7 @@ router.get('/register', function(req, res) {
   res.render('auth/register');
 })
 //register POST route
-router.post('/register', function(req, res) {db.user.findOrCreate({
+router.post('/register', function(req, res, next) {db.user.findOrCreate({
   where: {
       email: req.body.email
     }, defaults: {
@@ -27,9 +27,9 @@ router.post('/register', function(req, res) {db.user.findOrCreate({
       // authenticate user and start authorization process
       console.log("User created!");
       passport.authenticate('local', {
-        succesRedirect: '/',
+        succesRedirect: '/profile',
         successFlash: 'Thanks for signing up!'
-      }) (req, res);
+      }) (req, res, next);
       res.redirect("/");
     } else {
       // else if user already exists
@@ -40,6 +40,7 @@ router.post('/register', function(req, res) {db.user.findOrCreate({
       req.redirect('/auth/register');
     }
   }).catch(function(err) {
+    console.log(req.body);
     console.log(`Error found. \nMessage: ${err.message}. \nPlease review - ${err}`);
     req.flash('error', err.message);
     res.redirect('/auth/register');
@@ -67,7 +68,7 @@ router.post('login', function(req, res, next) {
       return next(error);
     }
 
-    req.login(function(user, error) {
+    req.login(user, function(error) {
       // if error move to error
       if(error) next(error);
       // if success flash success message
@@ -81,10 +82,15 @@ router.post('login', function(req, res, next) {
 })
 
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
+  successRedirect: '/profile',
   failureRedirect: '/auth/login',
   succssFlash: 'Welcome to our app!',
   failureFlash: 'Invalid username or password.'
 }))
+
+router.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+})
 // export router
 module.exports = router;

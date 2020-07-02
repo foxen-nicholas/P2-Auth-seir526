@@ -8,7 +8,7 @@ const ejsLayouts = require('express-ejs-layouts')
 // helmet, morga, passport, and custom middleware, express-session, sequelize session, flash
 const helmet = require('helmet');
 const session = require('express-session');
-const flash = require('flash');
+const flash = require('connect-flash');
 const passport = require('./config/ppConfig');
 const db = require('./models');
 // want to add alink to our customer middleware for isLoggedIn

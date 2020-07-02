@@ -3,18 +3,19 @@ const express = require('express');
 // import router
 const router = express.Router();
 //import db
-const db = require('../models');
+const db = require("../models");
 // import middleware
-const flash = require('flash');
+const flash = require("connect-flash");
 // TODO: 
-const passport = require('../config/ppConfig');
+const passport = require("../config/ppConfig");
 
 // register GET route
 router.get('/register', function(req, res) {
   res.render('auth/register');
 })
 //register POST route
-router.post('/register', function(req, res, next) {db.user.findOrCreate({
+router.post('/register', function(req, res, next) {
+  db.user.findOrCreate({
   where: {
       email: req.body.email
     }, defaults: {
@@ -27,10 +28,9 @@ router.post('/register', function(req, res, next) {db.user.findOrCreate({
       // authenticate user and start authorization process
       console.log("User created!");
       passport.authenticate('local', {
-        succesRedirect: '/profile',
+        successRedirect: '/profile',
         successFlash: 'Thanks for signing up!'
-      }) (req, res, next);
-      res.redirect("/");
+      })(req, res, next);
     } else {
       // else if user already exists
       // send error to user that email already exists
@@ -40,7 +40,6 @@ router.post('/register', function(req, res, next) {db.user.findOrCreate({
       req.redirect('/auth/register');
     }
   }).catch(function(err) {
-    console.log(req.body);
     console.log(`Error found. \nMessage: ${err.message}. \nPlease review - ${err}`);
     req.flash('error', err.message);
     res.redirect('/auth/register');
@@ -53,16 +52,12 @@ router.get('/login', function(req,res) {
 });
 
 // login post route
-router.post('login', function(req, res, next) {
+router.post('/login', function(req, res, next) {
   passport.authenticate('local', function(error, user, info) {
     // If no user authenticated
     if (!user) {
       req.flash('error', 'Invalid username or password');
-      req.session.save(function() {
-        return res.redirect('/auth/login');
-      });
-      // save to our user session no username
-      // redirect our user to try logging in again
+      return res.redirect('/auth/login')
     }
     if (error) {
       return next(error);
@@ -80,13 +75,6 @@ router.post('login', function(req, res, next) {
     })
   })(req, res, next);
 })
-
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/profile',
-  failureRedirect: '/auth/login',
-  succssFlash: 'Welcome to our app!',
-  failureFlash: 'Invalid username or password.'
-}))
 
 router.get('/logout', function(req, res) {
   req.logout();
